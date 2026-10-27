@@ -1,7 +1,7 @@
 // ===================================================
 // KRUNAL DESAI — PURE AESTHETIC SCROLL REEL LOGIC
 // By Vedant for Krunal • Uncropped Looping Media
-// Silky Scroll Snap & KD's Music Journey Suite
+// Silky Scroll Snap & Clair de Lune Auto-Start Music
 // ===================================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -62,7 +62,7 @@ function initAestheticScrolly() {
       }
     });
 
-    // Restore soothing music if we scrolled away from an unmuted video
+    // Restore soothing Clair de Lune if we scrolled away from an unmuted video
     if (window.restoreBackgroundMusic) {
       window.restoreBackgroundMusic();
     }
@@ -171,18 +171,9 @@ function initKeyboardNavigation() {
   });
 }
 
-// --- 4. KD's Music Journey — Curated Sound Experience ---
+// --- 4. Soothing Clair de Lune Ambient Music Engine (Auto-Start) ---
 let bgMusicAudio = null;
 let isBgMusicPlaying = false;
-let currentBgTrackIdx = 0;
-
-const soothingTracks = [
-  { title: "Clair de Lune", artist: "Claude Debussy • Serenity & Soul", file: "assets/audio/clair_de_lune.mp3", duration: "5:02" },
-  { title: "Nocturne Op. 9 No. 2", artist: "Frédéric Chopin • Grand Piano Emotion", file: "assets/audio/chopin_nocturne.mp3", duration: "4:15" },
-  { title: "Gymnopédie No. 1", artist: "Erik Satie • Late-Night Solitude", file: "assets/audio/gymnopedie_no1.mp3", duration: "3:08" },
-  { title: "Moonlight Sonata", artist: "Ludwig van Beethoven • Deep Atmospheric Flow", file: "assets/audio/moonlight_sonata.mp3", duration: "5:20" },
-  { title: "Happy Birthday Grand Piano", artist: "Acoustic Symphony • 28th October Celebration", file: "assets/audio/happy_birthday.mp3", duration: "2:21" }
-];
 
 function fadeAudio(audio, targetVol, durationMs = 800) {
   if (!audio) return;
@@ -200,53 +191,11 @@ function fadeAudio(audio, targetVol, durationMs = 800) {
   requestAnimationFrame(step);
 }
 
-function formatTime(seconds) {
-  if (isNaN(seconds)) return "0:00";
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${m}:${String(s).padStart(2, '0')}`;
-}
-
 function initSoothingBackgroundMusic() {
   const musicBtn = document.getElementById('bg-music-btn');
-  const musicTitleEl = document.getElementById('music-title');
-  bgMusicAudio = document.getElementById('bg-music-audio') || new Audio(soothingTracks[0].file);
-  bgMusicAudio.volume = 0.42;
-
-  // Modal elements
-  const modal = document.getElementById('music-journey-modal');
-  const modalClose = document.getElementById('music-modal-close');
-  const modalBackdrop = document.getElementById('music-modal-backdrop');
-  const vinylDisc = document.getElementById('vinyl-disc');
-  const modalTrackName = document.getElementById('modal-track-name');
-  const modalTrackDesc = document.getElementById('modal-track-desc');
-  const modalTimeCur = document.getElementById('modal-time-current');
-  const modalTimeDur = document.getElementById('modal-time-duration');
-  const modalProgressFill = document.getElementById('modal-progress-fill');
-  const modalProgressTrack = document.getElementById('modal-progress-track');
-  const ctrlPlayBtn = document.getElementById('ctrl-play-btn');
-  const ctrlPlayIcon = document.getElementById('ctrl-play-icon');
-  const ctrlPrevBtn = document.getElementById('ctrl-prev-btn');
-  const ctrlNextBtn = document.getElementById('ctrl-next-btn');
-  const playlistItems = document.querySelectorAll('.playlist-item');
-
-  function updateUIForTrack(idx) {
-    const track = soothingTracks[idx];
-    if (!track) return;
-
-    if (musicTitleEl) musicTitleEl.textContent = track.title;
-    if (modalTrackName) modalTrackName.textContent = track.title;
-    if (modalTrackDesc) modalTrackDesc.textContent = track.artist;
-    if (modalTimeDur) modalTimeDur.textContent = track.duration;
-
-    playlistItems.forEach((item, i) => {
-      if (i === idx) {
-        item.classList.add('active');
-      } else {
-        item.classList.remove('active');
-      }
-    });
-  }
+  bgMusicAudio = document.getElementById('bg-music-audio') || new Audio('assets/audio/clair_de_lune.mp3');
+  bgMusicAudio.loop = true;
+  bgMusicAudio.volume = 0.45;
 
   function setPlayState(playing) {
     isBgMusicPlaying = playing;
@@ -254,158 +203,58 @@ function initSoothingBackgroundMusic() {
       if (playing) musicBtn.classList.add('playing');
       else musicBtn.classList.remove('playing');
     }
-    if (vinylDisc) {
-      if (playing) vinylDisc.classList.add('spinning');
-      else vinylDisc.classList.remove('spinning');
-    }
-    if (ctrlPlayIcon) {
-      ctrlPlayIcon.textContent = playing ? '❚❚' : '▶';
-    }
   }
 
-  function playTrack(idx, fade = false) {
-    currentBgTrackIdx = idx;
-    const track = soothingTracks[idx];
-    bgMusicAudio.src = track.file;
-    updateUIForTrack(idx);
-
+  function startMusic(fade = false) {
     if (fade) bgMusicAudio.volume = 0;
     const playPromise = bgMusicAudio.play();
     if (playPromise !== undefined) {
       playPromise.then(() => {
         setPlayState(true);
-        if (fade) fadeAudio(bgMusicAudio, 0.42, 1200);
-        else bgMusicAudio.volume = 0.42;
+        if (fade) fadeAudio(bgMusicAudio, 0.45, 1200);
+        else bgMusicAudio.volume = 0.45;
       }).catch(err => {
-        console.log("Autoplay waiting for user gesture:", err);
+        // Will be triggered automatically on first gesture below
       });
     }
   }
 
   function togglePlayPause() {
     if (bgMusicAudio.paused) {
-      bgMusicAudio.play().then(() => {
-        setPlayState(true);
-        bgMusicAudio.volume = 0.42;
-      }).catch(() => {});
+      startMusic(false);
     } else {
       bgMusicAudio.pause();
       setPlayState(false);
     }
   }
 
-  // Open / Close Modal
-  function openModal() {
-    if (modal) {
-      modal.classList.remove('hidden');
-      modal.setAttribute('aria-hidden', 'false');
-    }
-  }
-
-  function closeModal() {
-    if (modal) {
-      modal.classList.add('hidden');
-      modal.setAttribute('aria-hidden', 'true');
-    }
-  }
-
   if (musicBtn) {
     musicBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openModal();
-      if (bgMusicAudio.paused) {
-        playTrack(currentBgTrackIdx, true);
-      }
-    });
-  }
-
-  if (modalClose) modalClose.addEventListener('click', closeModal);
-  if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal);
-
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
-      closeModal();
-    }
-  });
-
-  // Controls
-  if (ctrlPlayBtn) {
-    ctrlPlayBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       togglePlayPause();
     });
   }
 
-  if (ctrlNextBtn) {
-    ctrlNextBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const nextIdx = (currentBgTrackIdx + 1) % soothingTracks.length;
-      playTrack(nextIdx, false);
-    });
-  }
+  // 1. ATTEMPT IMMEDIATE AUTOPLAY ON PAGE LOAD
+  startMusic(false);
 
-  if (ctrlPrevBtn) {
-    ctrlPrevBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const prevIdx = (currentBgTrackIdx - 1 + soothingTracks.length) % soothingTracks.length;
-      playTrack(prevIdx, false);
-    });
-  }
-
-  // Playlist Items Click
-  playlistItems.forEach((item, idx) => {
-    item.addEventListener('click', () => {
-      playTrack(idx, false);
-    });
-  });
-
-  // Track progress & scrubber
-  bgMusicAudio.addEventListener('timeupdate', () => {
-    if (bgMusicAudio.duration) {
-      const pct = (bgMusicAudio.currentTime / bgMusicAudio.duration) * 100;
-      if (modalProgressFill) modalProgressFill.style.width = `${pct}%`;
-      if (modalTimeCur) modalTimeCur.textContent = formatTime(bgMusicAudio.currentTime);
-      if (modalTimeDur && !isNaN(bgMusicAudio.duration)) {
-        modalTimeDur.textContent = formatTime(bgMusicAudio.duration);
-      }
+  // 2. FOOLPROOF AUTO-START: UNLOCK ON ANY FIRST TOUCH / SCROLL / GESTURE
+  const autoStartOnGesture = () => {
+    if (bgMusicAudio.paused) {
+      startMusic(true);
     }
-  });
-
-  if (modalProgressTrack) {
-    modalProgressTrack.addEventListener('click', (e) => {
-      const rect = modalProgressTrack.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const pct = Math.max(0, Math.min(1, clickX / rect.width));
-      if (bgMusicAudio.duration) {
-        bgMusicAudio.currentTime = pct * bgMusicAudio.duration;
-      }
-    });
-  }
-
-  // Auto-advance when piece finishes
-  bgMusicAudio.addEventListener('ended', () => {
-    const nextIdx = (currentBgTrackIdx + 1) % soothingTracks.length;
-    playTrack(nextIdx, false);
-  });
-
-  // Autoplay unlock upon first user interaction
-  const unlockAudio = () => {
-    if (bgMusicAudio.paused && !isBgMusicPlaying) {
-      playTrack(0, true);
-    }
-    ['click', 'touchstart', 'scroll', 'keydown'].forEach(evt => {
-      window.removeEventListener(evt, unlockAudio, { capture: true });
+    const events = ['pointerdown', 'touchstart', 'touchend', 'scroll', 'wheel', 'keydown', 'click', 'mousemove'];
+    events.forEach(evt => {
+      window.removeEventListener(evt, autoStartOnGesture, { capture: true });
     });
   };
 
-  ['click', 'touchstart', 'scroll', 'keydown'].forEach(evt => {
-    window.addEventListener(evt, unlockAudio, { capture: true, once: true });
+  const events = ['pointerdown', 'touchstart', 'touchend', 'scroll', 'wheel', 'keydown', 'click', 'mousemove'];
+  events.forEach(evt => {
+    window.addEventListener(evt, autoStartOnGesture, { capture: true, once: true });
   });
 
-  // Export functions globally
-  window.playTrack = playTrack;
-  window.openMusicJourney = openModal;
-
+  // Audio ducking for looping videos
   window.duckBackgroundMusic = function() {
     if (bgMusicAudio && !bgMusicAudio.paused) {
       fadeAudio(bgMusicAudio, 0.05, 400);
@@ -414,7 +263,7 @@ function initSoothingBackgroundMusic() {
 
   window.restoreBackgroundMusic = function() {
     if (bgMusicAudio && !bgMusicAudio.paused) {
-      fadeAudio(bgMusicAudio, 0.42, 700);
+      fadeAudio(bgMusicAudio, 0.45, 600);
     }
   };
 }
@@ -678,7 +527,7 @@ function initConfettiCanvas() {
   animate();
 }
 
-// --- 10. Candle Blowout Ritual & Birthday Symphony Toast ---
+// --- 10. Candle Blowout Ritual & Toast ---
 function initCandleBlow() {
   const blowBtn = document.getElementById('blow-candles-btn');
   const flame = document.getElementById('main-flame');
@@ -692,15 +541,11 @@ function initCandleBlow() {
         toast.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
 
-      // Grand celebration: queue Track 4 (Happy Birthday Grand Piano) & fire confetti
-      if (window.playTrack) {
-        window.playTrack(4, true);
-      }
       if (window.triggerConfetti) {
         window.triggerConfetti(90);
       }
 
-      blowBtn.innerHTML = "<span>Wish Sent to KD 🎼✨</span>";
+      blowBtn.innerHTML = "<span>Wish Sent to KD ✨</span>";
       blowBtn.style.opacity = '0.88';
       blowBtn.style.pointerEvents = 'none';
 

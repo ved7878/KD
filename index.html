@@ -38,14 +38,14 @@
     <div class="header-inner">
       <span class="header-name">KD • 28 Oct</span>
 
-      <button class="bg-music-toggle-btn" id="bg-music-btn" type="button" aria-label="KD's Music Journey" title="Open KD's Music Journey">
-        <span class="music-icon">🎼</span>
+      <button class="bg-music-toggle-btn" id="bg-music-btn" type="button" aria-label="Toggle Clair de Lune" title="Play / Pause Clair de Lune">
+        <span class="music-icon">🎵</span>
         <span class="music-bars">
           <span class="m-bar m-bar-1"></span>
           <span class="m-bar m-bar-2"></span>
           <span class="m-bar m-bar-3"></span>
         </span>
-        <span class="music-title" id="music-title">Music Journey</span>
+        <span class="music-title" id="music-title">Clair de Lune</span>
       </button>
 
       <span class="header-chapter" id="chapter-label">28 October</span>
@@ -250,108 +250,6 @@
 
   </main>
 
-  <!-- ===================================================
-       KD's MUSIC JOURNEY — INTERACTIVE SOUNDTRACK DRAWER
-       =================================================== -->
-  <div class="music-journey-modal hidden" id="music-journey-modal" aria-hidden="true">
-    <div class="music-journey-backdrop" id="music-modal-backdrop"></div>
-    <div class="music-journey-card">
-      <div class="music-card-header">
-        <div class="music-card-title-group">
-          <span class="music-journey-tag">KD'S SOUND JOURNEY</span>
-          <h3 class="music-card-title">Curated Soundtrack 🎼</h3>
-        </div>
-        <button class="music-card-close" id="music-modal-close" type="button" aria-label="Close Music Journey">✕</button>
-      </div>
-
-      <!-- Vinyl Record & Live Now-Playing Display -->
-      <div class="music-now-playing-panel">
-        <div class="vinyl-disc-wrap">
-          <div class="vinyl-disc" id="vinyl-disc">
-            <div class="vinyl-grooves"></div>
-            <div class="vinyl-center-label">
-              <span class="vinyl-note">🎹</span>
-            </div>
-          </div>
-        </div>
-        <div class="now-playing-info">
-          <span class="np-track-name" id="modal-track-name">Debussy • Clair de Lune</span>
-          <span class="np-artist-name" id="modal-track-desc">Peaceful grand piano meditation</span>
-          <div class="np-scrubber-row">
-            <span class="np-time" id="modal-time-current">0:00</span>
-            <div class="np-progress-bar" id="modal-progress-track">
-              <div class="np-progress-fill" id="modal-progress-fill"></div>
-            </div>
-            <span class="np-time" id="modal-time-duration">5:02</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Audio Playback Controls -->
-      <div class="music-controls-row">
-        <button class="ctrl-btn" id="ctrl-prev-btn" type="button" aria-label="Previous Track">⏮</button>
-        <button class="ctrl-btn ctrl-play-btn" id="ctrl-play-btn" type="button" aria-label="Play or Pause">
-          <span id="ctrl-play-icon">▶</span>
-        </button>
-        <button class="ctrl-btn" id="ctrl-next-btn" type="button" aria-label="Next Track">⏭</button>
-      </div>
-
-      <!-- 5 Curated Classical & Acoustic Tracks -->
-      <div class="music-playlist-list" id="music-playlist-list">
-        <div class="playlist-item active" data-track-idx="0">
-          <div class="pl-left">
-            <span class="pl-num">01</span>
-            <div class="pl-meta">
-              <span class="pl-title">Clair de Lune</span>
-              <span class="pl-subtitle">Claude Debussy • Serenity & Soul</span>
-            </div>
-          </div>
-          <span class="pl-dur">5:02</span>
-        </div>
-        <div class="playlist-item" data-track-idx="1">
-          <div class="pl-left">
-            <span class="pl-num">02</span>
-            <div class="pl-meta">
-              <span class="pl-title">Nocturne in E-Flat Major</span>
-              <span class="pl-subtitle">Frédéric Chopin • Grand Piano Emotion</span>
-            </div>
-          </div>
-          <span class="pl-dur">4:15</span>
-        </div>
-        <div class="playlist-item" data-track-idx="2">
-          <div class="pl-left">
-            <span class="pl-num">03</span>
-            <div class="pl-meta">
-              <span class="pl-title">Gymnopédie No. 1</span>
-              <span class="pl-subtitle">Erik Satie • Late-Night Solitude</span>
-            </div>
-          </div>
-          <span class="pl-dur">3:08</span>
-        </div>
-        <div class="playlist-item" data-track-idx="3">
-          <div class="pl-left">
-            <span class="pl-num">04</span>
-            <div class="pl-meta">
-              <span class="pl-title">Moonlight Sonata</span>
-              <span class="pl-subtitle">Ludwig van Beethoven • Deep Atmospheric Flow</span>
-            </div>
-          </div>
-          <span class="pl-dur">5:20</span>
-        </div>
-        <div class="playlist-item" data-track-idx="4">
-          <div class="pl-left">
-            <span class="pl-num">05</span>
-            <div class="pl-meta">
-              <span class="pl-title">Happy Birthday Grand Piano</span>
-              <span class="pl-subtitle">Acoustic Symphony • 28th October Celebration</span>
-            </div>
-          </div>
-          <span class="pl-dur">2:21</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Interactive Floating Tap Reaction Button -->
   <div class="reaction-float-container" id="reaction-container">
     <button class="floating-heart-btn" id="floating-heart-btn" type="button" aria-label="Send Love">
@@ -362,8 +260,8 @@
 
   <button class="flow-scroll-top" id="scroll-top-btn" title="Top" aria-label="Top">↑</button>
 
-  <!-- Soothing Background Music Audio -->
-  <audio id="bg-music-audio" preload="auto" loop src="assets/audio/clair_de_lune.mp3"></audio>
+  <!-- Soothing Background Music Audio (Clair de Lune) -->
+  <audio id="bg-music-audio" preload="auto" loop autoplay playsinline src="assets/audio/clair_de_lune.mp3"></audio>
 
   <script src="app.js"></script>
 </body>
