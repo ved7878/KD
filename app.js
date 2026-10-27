@@ -409,7 +409,15 @@ function initPhotoSwitcher() {
   });
 }
 
-// --- 8. Live Countdown to October 28th ---
+// Check if tonight midnight (October 28th 00:00:00) has been reached
+function isTonightMidnightReached() {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const targetMidnight = new Date(currentYear, 9, 28, 0, 0, 0); // Month 9 = October
+  return now >= targetMidnight;
+}
+
+// --- 8. Live Countdown to October 28th & Midnight Lock Sync ---
 function initCountdown() {
   const daysEl = document.getElementById('count-days');
   const hoursEl = document.getElementById('count-hours');
@@ -426,7 +434,13 @@ function initCountdown() {
       target = new Date(currentYear + 1, 9, 28, 0, 0, 0);
     }
 
-    const isToday = now.getDate() === 28 && now.getMonth() === 9;
+    const diff = target - now;
+    const isToday = now >= target && (now.getDate() === 28 && now.getMonth() === 9);
+
+    // Sync live midnight lock state with the blow candle button
+    if (window.updateCandleLockStatus) {
+      window.updateCandleLockStatus(diff);
+    }
 
     if (isToday) {
       if (badgeEl) {
@@ -439,7 +453,6 @@ function initCountdown() {
       return;
     }
 
-    const diff = target - now;
     if (diff <= 0) {
       if (daysEl) daysEl.innerText = "00";
       if (hoursEl) hoursEl.innerText = "00";
@@ -527,14 +540,85 @@ function initConfettiCanvas() {
   animate();
 }
 
-// --- 10. Candle Blowout Ritual & Toast ---
+// --- 10. Candle Blowout Ritual (Locked Until Tonight 12 Midnight) ---
 function initCandleBlow() {
   const blowBtn = document.getElementById('blow-candles-btn');
   const flame = document.getElementById('main-flame');
   const toast = document.getElementById('secret-birthday-letter');
+  const lockIcon = document.getElementById('btn-lock-icon');
+  const blowText = document.getElementById('blow-btn-text');
+  const lockHint = document.getElementById('wish-locked-hint');
+
+  let manuallyUnlocked = false;
+
+  function updateLockStatus(diffMs = null) {
+    const unlocked = manuallyUnlocked || isTonightMidnightReached();
+
+    if (!blowBtn) return;
+
+    if (unlocked) {
+      if (blowBtn.classList.contains('is-locked')) {
+        blowBtn.classList.remove('is-locked');
+        blowBtn.classList.add('just-unlocked');
+        setTimeout(() => blowBtn.classList.remove('just-unlocked'), 1200);
+      }
+      if (lockIcon) lockIcon.textContent = '✨';
+      if (blowText && blowBtn.dataset.blown !== 'true') blowText.textContent = 'Blow Candle ✨';
+      if (lockHint) {
+        lockHint.textContent = "✨ It's October 28th! Make your wish now! ✨";
+        lockHint.classList.add('unlocked');
+      }
+    } else {
+      blowBtn.classList.add('is-locked');
+      if (lockIcon) lockIcon.textContent = '🔒';
+
+      if (diffMs !== null && diffMs > 0) {
+        const h = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((diffMs / (1000 * 60)) % 60);
+        const s = Math.floor((diffMs / 1000) % 60);
+        if (blowText) {
+          blowText.textContent = `Unlocks in ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+        }
+      } else {
+        if (blowText) blowText.textContent = 'Unlocks at Midnight (12:00 AM)';
+      }
+
+      if (lockHint) {
+        lockHint.textContent = 'Candle ritual unlocks tonight at 12:00 AM 🎂';
+        lockHint.classList.remove('unlocked');
+      }
+    }
+  }
+
+  // Hook into live countdown
+  window.updateCandleLockStatus = updateLockStatus;
+  updateLockStatus();
 
   if (blowBtn) {
-    blowBtn.addEventListener('click', () => {
+    blowBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      const unlocked = manuallyUnlocked || isTonightMidnightReached();
+
+      if (!unlocked) {
+        // Locked shake effect & gentle haptic alert
+        blowBtn.classList.remove('shaking');
+        void blowBtn.offsetWidth;
+        blowBtn.classList.add('shaking');
+        setTimeout(() => blowBtn.classList.remove('shaking'), 500);
+
+        if (lockHint) {
+          lockHint.textContent = '🔒 Locked! Countdown is running until tonight 12:00 AM! ⏳';
+          setTimeout(() => updateLockStatus(), 2500);
+        }
+
+        if (navigator.vibrate) {
+          try { navigator.vibrate([40, 30, 40]); } catch (e) {}
+        }
+        return;
+      }
+
+      // If unlocked: Perform blowout ritual
       if (flame) flame.classList.add('extinguished');
       if (toast) {
         toast.classList.remove('hidden');
@@ -545,7 +629,9 @@ function initCandleBlow() {
         window.triggerConfetti(90);
       }
 
-      blowBtn.innerHTML = "<span>Wish Sent to KD ✨</span>";
+      blowBtn.dataset.blown = 'true';
+      if (lockIcon) lockIcon.textContent = '✨';
+      if (blowText) blowText.textContent = 'Wish Sent to KD ✨';
       blowBtn.style.opacity = '0.88';
       blowBtn.style.pointerEvents = 'none';
 
@@ -554,6 +640,13 @@ function initCandleBlow() {
       }
     });
   }
+
+  // Developer / testing override helper: window.unlockCandleNow()
+  window.unlockCandleNow = function() {
+    manuallyUnlocked = true;
+    updateLockStatus();
+    console.log("Candle button unlocked for preview testing!");
+  };
 }
 
 // --- 11. Scroll Progress Line & Back to Top ---

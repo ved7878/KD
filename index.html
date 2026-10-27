@@ -233,9 +233,13 @@
           </div>
         </div>
 
-        <button class="btn-aesthetic-wish" id="blow-candles-btn" type="button">
-          <span>Blow Candle ✨</span>
-        </button>
+        <div class="candle-action-wrapper">
+          <button class="btn-aesthetic-wish is-locked" id="blow-candles-btn" type="button" aria-label="Blow Candle">
+            <span class="btn-lock-icon" id="btn-lock-icon">🔒</span>
+            <span id="blow-btn-text">Unlocks at Midnight</span>
+          </button>
+          <div class="wish-locked-hint" id="wish-locked-hint">Candle ritual unlocks at 12:00 AM tonight 🎂</div>
+        </div>
 
         <div class="secret-birthday-toast hidden" id="secret-birthday-letter">
           <p class="toast-quote">"Happy Birthday, KD! To the guy whose life is pure rhythm, chords, and good vibes. Wishing you endless music and an extraordinary journey ahead."</p>
