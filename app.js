@@ -195,7 +195,7 @@ function initSoothingBackgroundMusic() {
   const musicBtn = document.getElementById('bg-music-btn');
   bgMusicAudio = document.getElementById('bg-music-audio') || new Audio('assets/audio/clair_de_lune.mp3');
   bgMusicAudio.loop = true;
-  bgMusicAudio.volume = 0.45;
+  bgMusicAudio.volume = 0.5;
 
   function setPlayState(playing) {
     isBgMusicPlaying = playing;
@@ -205,23 +205,27 @@ function initSoothingBackgroundMusic() {
     }
   }
 
-  function startMusic(fade = false) {
-    if (fade) bgMusicAudio.volume = 0;
+  function playSound() {
+    bgMusicAudio.muted = false;
+    bgMusicAudio.volume = 0.5;
     const playPromise = bgMusicAudio.play();
     if (playPromise !== undefined) {
-      playPromise.then(() => {
+      return playPromise.then(() => {
         setPlayState(true);
-        if (fade) fadeAudio(bgMusicAudio, 0.45, 1200);
-        else bgMusicAudio.volume = 0.45;
-      }).catch(err => {
-        // Will be triggered automatically on first gesture below
+        cleanupGestureListeners();
+        return true;
+      }).catch(() => {
+        return false;
       });
     }
+    setPlayState(true);
+    cleanupGestureListeners();
+    return Promise.resolve(true);
   }
 
   function togglePlayPause() {
     if (bgMusicAudio.paused) {
-      startMusic(false);
+      playSound();
     } else {
       bgMusicAudio.pause();
       setPlayState(false);
@@ -235,24 +239,59 @@ function initSoothingBackgroundMusic() {
     });
   }
 
-  // 1. ATTEMPT IMMEDIATE AUTOPLAY ON PAGE LOAD
-  startMusic(false);
+  // Persistent gesture unlock for strict autoplay browsers (Chrome, Safari, Edge)
+  const gestureEvents = ['click', 'pointerdown', 'touchstart', 'touchend', 'keydown'];
+  let listenersAttached = false;
 
-  // 2. FOOLPROOF AUTO-START: UNLOCK ON ANY FIRST TOUCH / SCROLL / GESTURE
-  const autoStartOnGesture = () => {
-    if (bgMusicAudio.paused) {
-      startMusic(true);
-    }
-    const events = ['pointerdown', 'touchstart', 'touchend', 'scroll', 'wheel', 'keydown', 'click', 'mousemove'];
-    events.forEach(evt => {
-      window.removeEventListener(evt, autoStartOnGesture, { capture: true });
+  function onUserGesture() {
+    playSound();
+  }
+
+  function attachGestureListeners() {
+    if (listenersAttached) return;
+    listenersAttached = true;
+    gestureEvents.forEach(evt => {
+      window.addEventListener(evt, onUserGesture, { capture: true, passive: true });
+      document.addEventListener(evt, onUserGesture, { capture: true, passive: true });
     });
-  };
+    const reel = document.getElementById('story-reel');
+    if (reel) {
+      gestureEvents.forEach(evt => {
+        reel.addEventListener(evt, onUserGesture, { capture: true, passive: true });
+      });
+    }
+  }
 
-  const events = ['pointerdown', 'touchstart', 'touchend', 'scroll', 'wheel', 'keydown', 'click', 'mousemove'];
-  events.forEach(evt => {
-    window.addEventListener(evt, autoStartOnGesture, { capture: true, once: true });
+  function cleanupGestureListeners() {
+    if (!listenersAttached) return;
+    if (bgMusicAudio && !bgMusicAudio.paused && !bgMusicAudio.muted) {
+      gestureEvents.forEach(evt => {
+        window.removeEventListener(evt, onUserGesture, { capture: true, passive: true });
+        document.removeEventListener(evt, onUserGesture, { capture: true, passive: true });
+      });
+      const reel = document.getElementById('story-reel');
+      if (reel) {
+        gestureEvents.forEach(evt => {
+          reel.removeEventListener(evt, onUserGesture, { capture: true, passive: true });
+        });
+      }
+      listenersAttached = false;
+    }
+  }
+
+  // 1. ATTEMPT IMMEDIATE PLAY ON PAGE LOAD
+  playSound().then(success => {
+    if (!success) {
+      // Browser autoplay policy restricted unmuted playback.
+      // Pre-start muted so streaming and buffer starts immediately:
+      bgMusicAudio.muted = true;
+      bgMusicAudio.play().catch(() => {});
+      attachGestureListeners();
+    }
   });
+
+  // Always keep gesture listeners attached until playback is actively unmuted and playing
+  attachGestureListeners();
 
   // Audio ducking for looping videos
   window.duckBackgroundMusic = function() {
@@ -263,7 +302,7 @@ function initSoothingBackgroundMusic() {
 
   window.restoreBackgroundMusic = function() {
     if (bgMusicAudio && !bgMusicAudio.paused) {
-      fadeAudio(bgMusicAudio, 0.45, 600);
+      fadeAudio(bgMusicAudio, 0.5, 600);
     }
   };
 }
@@ -550,6 +589,7 @@ function initCandleBlow() {
   const lockHint = document.getElementById('wish-locked-hint');
 
   let manuallyUnlocked = false;
+  let alertUntilTimestamp = 0;
 
   function updateLockStatus(diffMs = null) {
     const unlocked = manuallyUnlocked || isTonightMidnightReached();
@@ -565,27 +605,33 @@ function initCandleBlow() {
       if (lockIcon) lockIcon.textContent = '✨';
       if (blowText && blowBtn.dataset.blown !== 'true') blowText.textContent = 'Blow Candle ✨';
       if (lockHint) {
-        lockHint.textContent = "✨ It's October 28th! Make your wish now! ✨";
+        lockHint.innerHTML = "<span>✨ Happy Birthday KD! Tap to blow the candle! ✨</span>";
+        lockHint.classList.remove('alerting');
         lockHint.classList.add('unlocked');
       }
     } else {
       blowBtn.classList.add('is-locked');
       if (lockIcon) lockIcon.textContent = '🔒';
+      // Keep the button text clean, stable, and proud: "Blow Candle ✨"
+      if (blowText && blowBtn.dataset.blown !== 'true') {
+        blowText.textContent = 'Blow Candle ✨';
+      }
 
-      if (diffMs !== null && diffMs > 0) {
-        const h = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
-        const m = Math.floor((diffMs / (1000 * 60)) % 60);
-        const s = Math.floor((diffMs / 1000) % 60);
-        if (blowText) {
-          blowText.textContent = `Unlocks in ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
-        }
-      } else {
-        if (blowText) blowText.textContent = 'Unlocks at Midnight (12:00 AM)';
+      // If user recently tapped the locked button, don't prematurely wipe the alert
+      if (Date.now() < alertUntilTimestamp) {
+        return;
       }
 
       if (lockHint) {
-        lockHint.textContent = 'Candle ritual unlocks tonight at 12:00 AM 🎂';
-        lockHint.classList.remove('unlocked');
+        lockHint.classList.remove('alerting', 'unlocked');
+        if (diffMs !== null && diffMs > 0) {
+          const totalHours = Math.floor(diffMs / (1000 * 60 * 60));
+          const m = Math.floor((diffMs / (1000 * 60)) % 60);
+          const s = Math.floor((diffMs / 1000) % 60);
+          lockHint.innerHTML = `<span>⏳ Unlocks tonight at 12:00 AM • <strong>${String(totalHours).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s</strong> remaining</span>`;
+        } else {
+          lockHint.innerHTML = '<span>⏳ Unlocks tonight at 12:00 AM after countdown runs out</span>';
+        }
       }
     }
   }
@@ -608,8 +654,15 @@ function initCandleBlow() {
         setTimeout(() => blowBtn.classList.remove('shaking'), 500);
 
         if (lockHint) {
-          lockHint.textContent = '🔒 Locked! Countdown is running until tonight 12:00 AM! ⏳';
-          setTimeout(() => updateLockStatus(), 2500);
+          alertUntilTimestamp = Date.now() + 3200;
+          lockHint.classList.add('alerting');
+          lockHint.innerHTML = '<span>🔒 Locked until tonight 12:00 AM! Countdown is running ⏳</span>';
+          setTimeout(() => {
+            if (!manuallyUnlocked && !isTonightMidnightReached()) {
+              lockHint.classList.remove('alerting');
+              updateLockStatus();
+            }
+          }, 3200);
         }
 
         if (navigator.vibrate) {
@@ -630,9 +683,9 @@ function initCandleBlow() {
       }
 
       blowBtn.dataset.blown = 'true';
-      if (lockIcon) lockIcon.textContent = '✨';
+      if (lockIcon) lockIcon.textContent = '❤️';
       if (blowText) blowText.textContent = 'Wish Sent to KD ✨';
-      blowBtn.style.opacity = '0.88';
+      blowBtn.style.opacity = '0.9';
       blowBtn.style.pointerEvents = 'none';
 
       if (navigator.vibrate) {
