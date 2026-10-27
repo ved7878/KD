@@ -164,9 +164,13 @@ function fadeAudio(audio, targetVol, durationMs = 800) {
 
 function initSoothingBackgroundMusic() {
   const musicBtn = document.getElementById('bg-music-btn');
+  const veil = document.getElementById('music-start-veil');
+
   bgMusicAudio = document.getElementById('bg-music-audio') || new Audio('assets/audio/clair_de_lune.mp3');
   bgMusicAudio.loop = true;
-  bgMusicAudio.volume = 0.5;
+  bgMusicAudio.volume = 0.55;
+
+  let audioUnlocked = false;
 
   function setPlayState(playing) {
     isBgMusicPlaying = playing;
@@ -176,20 +180,47 @@ function initSoothingBackgroundMusic() {
     }
   }
 
+  function dismissVeil() {
+    if (veil && !veil.classList.contains('fading-out')) {
+      veil.classList.add('fading-out');
+      setTimeout(() => {
+        veil.style.display = 'none';
+        veil.classList.remove('visible', 'fading-out');
+      }, 500);
+    }
+  }
+
   function playSound() {
     bgMusicAudio.muted = false;
-    bgMusicAudio.volume = 0.5;
+    bgMusicAudio.volume = 0.55;
+
+    // Wake up Web Audio subsystem if present (iOS Safari unlock)
+    if (window.AudioContext || window.webkitAudioContext) {
+      try {
+        if (!window.kdAudioCtx) {
+          window.kdAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (window.kdAudioCtx.state === 'suspended') {
+          window.kdAudioCtx.resume();
+        }
+      } catch (e) {}
+    }
+
     const playPromise = bgMusicAudio.play();
     if (playPromise !== undefined) {
       return playPromise.then(() => {
+        audioUnlocked = true;
         setPlayState(true);
+        dismissVeil();
         cleanupGestureListeners();
         return true;
       }).catch(() => {
         return false;
       });
     }
+    audioUnlocked = true;
     setPlayState(true);
+    dismissVeil();
     cleanupGestureListeners();
     return Promise.resolve(true);
   }
@@ -210,12 +241,25 @@ function initSoothingBackgroundMusic() {
     });
   }
 
+  // Handle tap anywhere on the entrance veil
+  if (veil) {
+    const handleVeilTap = (e) => {
+      e.stopPropagation();
+      playSound();
+    };
+    veil.addEventListener('click', handleVeilTap);
+    veil.addEventListener('pointerdown', handleVeilTap);
+    veil.addEventListener('touchstart', handleVeilTap, { passive: true });
+  }
+
   // Persistent gesture unlock for strict autoplay browsers (Chrome, Safari, Edge)
   const gestureEvents = ['click', 'pointerdown', 'touchstart', 'touchend', 'keydown'];
   let listenersAttached = false;
 
   function onUserGesture() {
-    playSound();
+    if (!audioUnlocked) {
+      playSound();
+    }
   }
 
   function attachGestureListeners() {
@@ -225,12 +269,6 @@ function initSoothingBackgroundMusic() {
       window.addEventListener(evt, onUserGesture, { capture: true, passive: true });
       document.addEventListener(evt, onUserGesture, { capture: true, passive: true });
     });
-    const reel = document.getElementById('story-reel');
-    if (reel) {
-      gestureEvents.forEach(evt => {
-        reel.addEventListener(evt, onUserGesture, { capture: true, passive: true });
-      });
-    }
   }
 
   function cleanupGestureListeners() {
@@ -240,12 +278,6 @@ function initSoothingBackgroundMusic() {
         window.removeEventListener(evt, onUserGesture, { capture: true, passive: true });
         document.removeEventListener(evt, onUserGesture, { capture: true, passive: true });
       });
-      const reel = document.getElementById('story-reel');
-      if (reel) {
-        gestureEvents.forEach(evt => {
-          reel.removeEventListener(evt, onUserGesture, { capture: true, passive: true });
-        });
-      }
       listenersAttached = false;
     }
   }
@@ -253,15 +285,15 @@ function initSoothingBackgroundMusic() {
   // 1. ATTEMPT IMMEDIATE PLAY ON PAGE LOAD
   playSound().then(success => {
     if (!success) {
-      // Browser autoplay policy restricted unmuted playback.
-      // Pre-start muted so streaming and buffer starts immediately:
-      bgMusicAudio.muted = true;
-      bgMusicAudio.play().catch(() => {});
+      // Browser autoplay policy restricted unmuted playback on cold open:
+      // Show luxury entrance gate so 1 tap immediately starts music & enters!
+      if (veil) {
+        veil.classList.add('visible');
+      }
       attachGestureListeners();
     }
   });
 
-  // Always keep gesture listeners attached until playback is actively unmuted and playing
   attachGestureListeners();
 
   // Audio ducking for looping videos

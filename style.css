@@ -33,7 +33,7 @@
 
 html {
   font-size: 16px;
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: y proximity;
   background-color: #030407;
   color: var(--text-main);
   font-family: var(--font-sans);
@@ -1017,4 +1017,140 @@ body.aesthetic-body {
   .scroll-subtle-hint {
     margin-top: 0.5rem;
   }
+}
+
+/* Mobile Touch Scroll Tuning: Disable scroll snap on touch devices to completely eliminate auto-scrolling */
+@media (max-width: 768px), (pointer: coarse) {
+  html {
+    scroll-snap-type: none !important;
+  }
+
+  .story-slide {
+    scroll-snap-align: none !important;
+    scroll-snap-stop: normal !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+  }
+}
+
+/* ===================================================
+   9. AMBIENT MUSIC UNLOCK VEIL (Aesthetic Entrance Gate)
+   Guarantees 100% Unmuted Music Autoplay on Mobile
+   =================================================== */
+.music-start-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: radial-gradient(circle at center, rgba(14, 18, 30, 0.96) 0%, rgba(3, 4, 7, 0.98) 100%);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.music-start-veil.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.music-start-veil.fading-out {
+  opacity: 0;
+  transform: scale(1.04);
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.veil-card {
+  max-width: 380px;
+  width: 100%;
+  background: rgba(14, 18, 30, 0.88);
+  border: 1px solid rgba(212, 175, 55, 0.38);
+  border-radius: var(--radius-lg);
+  padding: 2.2rem 1.75rem;
+  text-align: center;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.9), 0 0 35px rgba(212, 175, 55, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  animation: veilCardPop 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes veilCardPop {
+  0%   { opacity: 0; transform: translateY(24px) scale(0.92); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.veil-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  background: rgba(212, 175, 55, 0.16);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  padding: 0.3rem 0.95rem;
+  border-radius: var(--radius-full);
+}
+
+.veil-title {
+  font-family: var(--font-serif);
+  font-size: 2.3rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ffffff 0%, #fceda1 40%, #d4af37 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.15;
+}
+
+.veil-sub {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+}
+
+.veil-btn {
+  background: linear-gradient(135deg, var(--gold-primary), #b38f2a);
+  color: #06080d;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 0.85rem 1.95rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 6px 26px rgba(212, 175, 55, 0.55);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: var(--font-sans);
+  animation: veilBtnGlow 2.2s infinite alternate ease-in-out;
+}
+
+@keyframes veilBtnGlow {
+  0%   { box-shadow: 0 6px 24px rgba(212, 175, 55, 0.45); transform: scale(1); }
+  100% { box-shadow: 0 8px 32px rgba(212, 175, 55, 0.75); transform: scale(1.03); }
+}
+
+.veil-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.veil-play-icon {
+  font-size: 0.88rem;
+  color: #06080d;
+}
+
+.veil-subhint {
+  font-size: 0.72rem;
+  color: var(--gold-soft);
+  opacity: 0.75;
+  letter-spacing: 0.06em;
 }
