@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#030407">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Krunal Desai • 28 October</title>
+  <meta name="description" content="Happy Birthday Krunal Desai (KD) — 28th October Musical Journey.">
+
+  <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="aesthetic-body">
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- ===================================================
+       STORIES SEGMENTED TOP BAR (Apple / Instagram Style)
+       =================================================== -->
+  <header class="aesthetic-header">
+    <div class="story-segments-row" id="story-segments-row">
+      <div class="story-segment-track current" data-step="0"><div class="story-segment-fill"></div></div>
+      <div class="story-segment-track" data-step="1"><div class="story-segment-fill"></div></div>
+      <div class="story-segment-track" data-step="2"><div class="story-segment-fill"></div></div>
+      <div class="story-segment-track" data-step="3"><div class="story-segment-fill"></div></div>
+      <div class="story-segment-track" data-step="4"><div class="story-segment-fill"></div></div>
+      <div class="story-segment-track" data-step="5"><div class="story-segment-fill"></div></div>
+      <div class="story-segment-track" data-step="6"><div class="story-segment-fill"></div></div>
+      <div class="story-segment-track" data-step="7"><div class="story-segment-fill"></div></div>
+      <div class="story-segment-track" data-step="8"><div class="story-segment-fill"></div></div>
+    </div>
+    <div class="header-inner">
+      <span class="header-name">KD • 28 Oct</span>
+
+      <button class="bg-music-toggle-btn" id="bg-music-btn" type="button" aria-label="KD's Music Journey" title="Open KD's Music Journey">
+        <span class="music-icon">🎼</span>
+        <span class="music-bars">
+          <span class="m-bar m-bar-1"></span>
+          <span class="m-bar m-bar-2"></span>
+          <span class="m-bar m-bar-3"></span>
+        </span>
+        <span class="music-title" id="music-title">Music Journey</span>
+      </button>
+
+      <span class="header-chapter" id="chapter-label">28 October</span>
+    </div>
+    <div class="progress-bar-fill" id="scroll-progress"></div>
+  </header>
+
+  <!-- ===================================================
+       STORIES REEL — FULL-SCREEN SILKY SCROLL SNAP
+       Real Photos & Videos (100% Uncropped)
+       =================================================== -->
+  <main class="story-reel-container" id="story-reel">
+
+    <!-- Slide 0: Hero (28 October • Prelude) -->
+    <section class="story-slide is-active" id="slide-0" data-index="0" data-chapter="Prelude • 28 Oct">
+      <div class="slide-blur-backdrop" style="background-image: url('assets/images/real_kd_8_web.jpg');"></div>
+      <div class="slide-media-wrap">
+        <img src="assets/images/real_kd_8_web.jpg" alt="Krunal Desai" class="slide-uncropped-media">
+      </div>
+      <div class="slide-scrim"></div>
+      <div class="slide-content">
+        <div class="caption-pill" id="bday-badge">28 October • Prelude</div>
+        <h1 class="aesthetic-title">Krunal Desai</h1>
+        <div class="countdown-minimal">
+          <span id="count-days">00</span>d <span class="c-dot">•</span>
+          <span id="count-hours">00</span>h <span class="c-dot">•</span>
+          <span id="count-mins">00</span>m <span class="c-dot">•</span>
+          <span id="count-secs">00</span>s
+        </div>
+        <div class="scroll-subtle-hint">Swipe up ↑</div>
+      </div>
+    </section>
+
+    <!-- Slide 1: Video 1 (Campus • Movement I) -->
+    <section class="story-slide" id="slide-1" data-index="1" data-chapter="Movement I • Hostel">
+      <div class="slide-blur-backdrop video-ambient-glow"></div>
+      <div class="slide-media-wrap">
+        <video 
+          class="slide-uncropped-media slide-video-element" 
+          id="bg-video-1" 
+          src="assets/videos/kd_memory_video_1.mp4" 
+          autoplay 
+          loop 
+          muted 
+          playsinline 
+          webkit-playsinline 
+          preload="auto"
+        ></video>
+      </div>
+      <button class="sound-toggle-btn" data-video="bg-video-1" type="button" aria-label="Toggle Sound">
+        <span class="sound-icon">🔇</span>
+        <span class="sound-bars">
+          <span class="bar bar-1"></span>
+          <span class="bar bar-2"></span>
+          <span class="bar bar-3"></span>
+          <span class="bar bar-4"></span>
+        </span>
+        <span class="sound-label">Audio</span>
+      </button>
+      <div class="slide-scrim"></div>
+      <div class="slide-content">
+        <div class="caption-pill">Movement I • Campus</div>
+        <h2 class="aesthetic-title">Hostel Nights</h2>
+      </div>
+    </section>
+
+    <!-- Slide 2: Cake Smear (Allegro) -->
+    <section class="story-slide" id="slide-2" data-index="2" data-chapter="Allegro • Cake">
+      <div class="slide-blur-backdrop" style="background-image: url('assets/images/real_kd_5.jpg');"></div>
+      <div class="slide-media-wrap">
+        <img src="assets/images/real_kd_5.jpg" alt="KD Cake Face" class="slide-uncropped-media">
+      </div>
+      <div class="slide-scrim"></div>
+      <div class="slide-content">
+        <div class="caption-pill">Allegro • The Ritual</div>
+        <h2 class="aesthetic-title">Double Peace ✌️</h2>
+      </div>
+    </section>
+
+    <!-- Slide 3: Activa with Miky (Rhythm) -->
+    <section class="story-slide" id="slide-3" data-index="3" data-chapter="Rhythm • Activa">
+      <div class="slide-blur-backdrop" style="background-image: url('assets/images/real_kd_4.jpg');"></div>
+      <div class="slide-media-wrap">
+        <img src="assets/images/real_kd_4.jpg" alt="KD Wink & Peace" class="slide-uncropped-media">
+      </div>
+      <div class="slide-scrim"></div>
+      <div class="slide-content">
+        <div class="caption-pill">Rhythm • City Streets</div>
+        <h2 class="aesthetic-title">Activa Ride 🛵</h2>
+      </div>
+    </section>
+
+    <!-- Slide 4: Video 2 (Vibrant Tempo) -->
+    <section class="story-slide" id="slide-4" data-index="4" data-chapter="Tempo • Classic KD">
+      <div class="slide-blur-backdrop video-ambient-glow"></div>
+      <div class="slide-media-wrap">
+        <video 
+          class="slide-uncropped-media slide-video-element" 
+          id="bg-video-2" 
+          src="assets/videos/kd_memory_video_2.mp4" 
+          autoplay 
+          loop 
+          muted 
+          playsinline 
+          webkit-playsinline 
+          preload="auto"
+        ></video>
+      </div>
+      <button class="sound-toggle-btn" data-video="bg-video-2" type="button" aria-label="Toggle Sound">
+        <span class="sound-icon">🔇</span>
+        <span class="sound-bars">
+          <span class="bar bar-1"></span>
+          <span class="bar bar-2"></span>
+          <span class="bar bar-3"></span>
+          <span class="bar bar-4"></span>
+        </span>
+        <span class="sound-label">Audio</span>
+      </button>
+      <div class="slide-scrim"></div>
+      <div class="slide-content">
+        <div class="caption-pill">Tempo • Energy</div>
+        <h2 class="aesthetic-title">Classic KD ⚡</h2>
+      </div>
+    </section>
+
+    <!-- Slide 5: Marble Elephant (Royal Cadence) -->
+    <section class="story-slide" id="slide-5" data-index="5" data-chapter="Cadence • Heritage">
+      <div class="slide-blur-backdrop" style="background-image: url('assets/images/real_kd_1.jpg');"></div>
+      <div class="slide-media-wrap">
+        <img src="assets/images/real_kd_1.jpg" alt="KD Marble Elephant" class="slide-uncropped-media">
+      </div>
+      <div class="slide-scrim"></div>
+      <div class="slide-content">
+        <div class="caption-pill">Cadence • Heritage</div>
+        <h2 class="aesthetic-title">Effortless 👑</h2>
+      </div>
+    </section>
+
+    <!-- Slide 6: 11:53 PM Night Shift (Nocturne) -->
+    <section class="story-slide" id="slide-6" data-index="6" data-chapter="Nocturne • 11:53 PM">
+      <div class="slide-blur-backdrop" style="background-image: url('assets/images/real_kd_7.jpg');"></div>
+      <div class="slide-media-wrap">
+        <img src="assets/images/real_kd_7.jpg" alt="KD Midnight Shift" class="slide-uncropped-media">
+      </div>
+      <div class="slide-scrim"></div>
+      <div class="slide-content">
+        <div class="caption-pill">Nocturne • Midnight</div>
+        <h2 class="aesthetic-title">11:53 PM 🌙</h2>
+      </div>
+    </section>
+
+    <!-- Slide 7: Real Moments (Harmonies) -->
+    <section class="story-slide" id="slide-7" data-index="7" data-chapter="Harmonies • Sides">
+      <div class="slide-blur-backdrop" id="peace-blur-bg" style="background-image: url('assets/images/real_kd_2.jpg');"></div>
+      <div class="slide-media-wrap">
+        <img src="assets/images/real_kd_2.jpg" alt="Krunal Solitude" class="slide-uncropped-media" id="peace-main-img">
+      </div>
+      <div class="slide-scrim"></div>
+      <div class="slide-content">
+        <div class="caption-pill">Harmonies • Real Moments</div>
+        <h2 class="aesthetic-title">Sides of KD</h2>
+        <div class="switcher-minimal-pills">
+          <button class="minimal-pill-btn active" data-img="assets/images/real_kd_2.jpg" type="button">🌿 Solitude</button>
+          <button class="minimal-pill-btn" data-img="assets/images/real_kd_6.jpg" type="button">🧣 Late Nights</button>
+          <button class="minimal-pill-btn" data-img="assets/images/real_kd_3.jpg" type="button">❤️ Soul</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 8: Candle Wish Finale (Birthday Symphony) -->
+    <section class="story-slide" id="slide-8" data-index="8" data-chapter="Symphony • Make a Wish">
+      <div class="slide-blur-backdrop" style="background-image: url('assets/images/real_kd_8_web.jpg');"></div>
+      <div class="slide-media-wrap">
+        <img src="assets/images/real_kd_8_web.jpg" alt="Celebration" class="slide-uncropped-media" style="opacity: 0.35;">
+      </div>
+      <div class="slide-scrim"></div>
+      <div class="slide-content finale-content">
+        <div class="caption-pill">Symphony • 28 October</div>
+        <h2 class="aesthetic-title">Make a Wish</h2>
+
+        <div class="minimal-candle-sculpture">
+          <div class="candle-stem">
+            <div class="candle-wick"></div>
+            <div class="candle-flame" id="main-flame"></div>
+          </div>
+        </div>
+
+        <button class="btn-aesthetic-wish" id="blow-candles-btn" type="button">
+          <span>Blow Candle ✨</span>
+        </button>
+
+        <div class="secret-birthday-toast hidden" id="secret-birthday-letter">
+          <p class="toast-quote">"Happy Birthday, KD! To the guy whose life is pure rhythm, chords, and good vibes. Wishing you endless music and an extraordinary journey ahead."</p>
+          <span class="toast-sign">— Vedant ❤️</span>
+        </div>
+
+        <div class="minimal-footer-credit">
+          Krunal Desai • 28th October
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================
+       KD's MUSIC JOURNEY — INTERACTIVE SOUNDTRACK DRAWER
+       =================================================== -->
+  <div class="music-journey-modal hidden" id="music-journey-modal" aria-hidden="true">
+    <div class="music-journey-backdrop" id="music-modal-backdrop"></div>
+    <div class="music-journey-card">
+      <div class="music-card-header">
+        <div class="music-card-title-group">
+          <span class="music-journey-tag">KD'S SOUND JOURNEY</span>
+          <h3 class="music-card-title">Curated Soundtrack 🎼</h3>
+        </div>
+        <button class="music-card-close" id="music-modal-close" type="button" aria-label="Close Music Journey">✕</button>
+      </div>
+
+      <!-- Vinyl Record & Live Now-Playing Display -->
+      <div class="music-now-playing-panel">
+        <div class="vinyl-disc-wrap">
+          <div class="vinyl-disc" id="vinyl-disc">
+            <div class="vinyl-grooves"></div>
+            <div class="vinyl-center-label">
+              <span class="vinyl-note">🎹</span>
+            </div>
+          </div>
+        </div>
+        <div class="now-playing-info">
+          <span class="np-track-name" id="modal-track-name">Debussy • Clair de Lune</span>
+          <span class="np-artist-name" id="modal-track-desc">Peaceful grand piano meditation</span>
+          <div class="np-scrubber-row">
+            <span class="np-time" id="modal-time-current">0:00</span>
+            <div class="np-progress-bar" id="modal-progress-track">
+              <div class="np-progress-fill" id="modal-progress-fill"></div>
+            </div>
+            <span class="np-time" id="modal-time-duration">5:02</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audio Playback Controls -->
+      <div class="music-controls-row">
+        <button class="ctrl-btn" id="ctrl-prev-btn" type="button" aria-label="Previous Track">⏮</button>
+        <button class="ctrl-btn ctrl-play-btn" id="ctrl-play-btn" type="button" aria-label="Play or Pause">
+          <span id="ctrl-play-icon">▶</span>
+        </button>
+        <button class="ctrl-btn" id="ctrl-next-btn" type="button" aria-label="Next Track">⏭</button>
+      </div>
+
+      <!-- 5 Curated Classical & Acoustic Tracks -->
+      <div class="music-playlist-list" id="music-playlist-list">
+        <div class="playlist-item active" data-track-idx="0">
+          <div class="pl-left">
+            <span class="pl-num">01</span>
+            <div class="pl-meta">
+              <span class="pl-title">Clair de Lune</span>
+              <span class="pl-subtitle">Claude Debussy • Serenity & Soul</span>
+            </div>
+          </div>
+          <span class="pl-dur">5:02</span>
+        </div>
+        <div class="playlist-item" data-track-idx="1">
+          <div class="pl-left">
+            <span class="pl-num">02</span>
+            <div class="pl-meta">
+              <span class="pl-title">Nocturne in E-Flat Major</span>
+              <span class="pl-subtitle">Frédéric Chopin • Grand Piano Emotion</span>
+            </div>
+          </div>
+          <span class="pl-dur">4:15</span>
+        </div>
+        <div class="playlist-item" data-track-idx="2">
+          <div class="pl-left">
+            <span class="pl-num">03</span>
+            <div class="pl-meta">
+              <span class="pl-title">Gymnopédie No. 1</span>
+              <span class="pl-subtitle">Erik Satie • Late-Night Solitude</span>
+            </div>
+          </div>
+          <span class="pl-dur">3:08</span>
+        </div>
+        <div class="playlist-item" data-track-idx="3">
+          <div class="pl-left">
+            <span class="pl-num">04</span>
+            <div class="pl-meta">
+              <span class="pl-title">Moonlight Sonata</span>
+              <span class="pl-subtitle">Ludwig van Beethoven • Deep Atmospheric Flow</span>
+            </div>
+          </div>
+          <span class="pl-dur">5:20</span>
+        </div>
+        <div class="playlist-item" data-track-idx="4">
+          <div class="pl-left">
+            <span class="pl-num">05</span>
+            <div class="pl-meta">
+              <span class="pl-title">Happy Birthday Grand Piano</span>
+              <span class="pl-subtitle">Acoustic Symphony • 28th October Celebration</span>
+            </div>
+          </div>
+          <span class="pl-dur">2:21</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Floating Tap Reaction Button -->
+  <div class="reaction-float-container" id="reaction-container">
+    <button class="floating-heart-btn" id="floating-heart-btn" type="button" aria-label="Send Love">
+      <span class="heart-icon">❤️</span>
+      <span class="heart-counter" id="heart-counter">28</span>
+    </button>
+  </div>
+
+  <button class="flow-scroll-top" id="scroll-top-btn" title="Top" aria-label="Top">↑</button>
+
+  <!-- Soothing Background Music Audio -->
+  <audio id="bg-music-audio" preload="auto" loop src="assets/audio/clair_de_lune.mp3"></audio>
+
+  <script src="app.js"></script>
+</body>
+</html>
