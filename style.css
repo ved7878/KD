@@ -33,7 +33,6 @@
 
 html {
   font-size: 16px;
-  scroll-behavior: smooth;
   scroll-snap-type: y mandatory;
   background-color: #030407;
   color: var(--text-main);
@@ -42,7 +41,7 @@ html {
   height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
-  overscroll-behavior-y: none;
+  overscroll-behavior-y: contain;
 }
 
 body.aesthetic-body {
@@ -265,7 +264,7 @@ body.aesthetic-body {
   min-height: 100dvh;
   width: 100vw;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -275,6 +274,12 @@ body.aesthetic-body {
   padding: 1.25rem;
   padding-bottom: calc(2.2rem + env(safe-area-inset-bottom, 0px));
   background: #030407;
+}
+
+#slide-8.story-slide {
+  justify-content: center;
+  padding-top: calc(56px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
 }
 
 /* Ambient Blurred Edge Fill */
@@ -604,20 +609,24 @@ body.aesthetic-body {
    =================================================== */
 .finale-content {
   max-width: 520px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .minimal-candle-sculpture {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 1.25rem auto 0.85rem;
+  margin: 0.85rem auto 0.65rem;
 }
 
 .candle-stem {
-  width: 28px;
-  height: 70px;
+  width: 26px;
+  height: 58px;
   background: linear-gradient(180deg, #f8f6f0 0%, #d8caa4 100%);
-  border-radius: 14px 14px 4px 4px;
+  border-radius: 13px 13px 4px 4px;
   position: relative;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
 }
@@ -815,7 +824,7 @@ body.aesthetic-body {
 }
 
 .minimal-footer-credit {
-  margin-top: 1.5rem;
+  margin-top: 0.85rem;
   font-size: 0.72rem;
   color: var(--text-muted);
   letter-spacing: 0.12em;

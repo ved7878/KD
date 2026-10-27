@@ -74,53 +74,24 @@ function initAestheticScrolly() {
     updateStorySegments(activeIndex);
   }
 
-  // IntersectionObserver tuned for scroll snap boundaries
+  // IntersectionObserver tuned for silky smooth, GPU-composited slide transitions
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const slide = entry.target;
         const index = parseInt(slide.dataset.index, 10) || 0;
         const chapter = slide.dataset.chapter;
-        setActiveSlide(index, chapter);
+        if (index !== currentActiveIndex) {
+          setActiveSlide(index, chapter);
+        }
       }
     });
   }, {
     root: null,
-    threshold: 0.55
+    threshold: 0.5
   });
 
   slides.forEach(slide => observer.observe(slide));
-
-  // Momentum scroll fallback for swift flicks
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        const viewportCenter = window.innerHeight / 2;
-        let closestIndex = 0;
-        let minDistance = Infinity;
-
-        slides.forEach((slide, idx) => {
-          const rect = slide.getBoundingClientRect();
-          const slideCenter = rect.top + rect.height / 2;
-          const dist = Math.abs(viewportCenter - slideCenter);
-          if (dist < minDistance) {
-            minDistance = dist;
-            closestIndex = idx;
-          }
-        });
-
-        if (closestIndex !== currentActiveIndex) {
-          const activeSlide = slides[closestIndex];
-          if (activeSlide) {
-            setActiveSlide(closestIndex, activeSlide.dataset.chapter);
-          }
-        }
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
 }
 
 // --- 2. Instagram / Apple Style Segmented Progress Tracker ---
@@ -675,7 +646,6 @@ function initCandleBlow() {
       if (flame) flame.classList.add('extinguished');
       if (toast) {
         toast.classList.remove('hidden');
-        toast.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
 
       if (window.triggerConfetti) {
@@ -707,21 +677,28 @@ function initScrollInteractions() {
   const progressBar = document.getElementById('scroll-progress');
   const scrollTopBtn = document.getElementById('scroll-top-btn');
 
+  let ticking = false;
   const onScroll = () => {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
 
-    if (progressBar) {
-      progressBar.style.width = `${Math.min(100, pct)}%`;
-    }
+        if (progressBar) {
+          progressBar.style.width = `${Math.min(100, pct)}%`;
+        }
 
-    if (scrollTopBtn) {
-      if (scrollTop > 450) {
-        scrollTopBtn.classList.add('visible');
-      } else {
-        scrollTopBtn.classList.remove('visible');
-      }
+        if (scrollTopBtn) {
+          if (scrollTop > 450) {
+            scrollTopBtn.classList.add('visible');
+          } else {
+            scrollTopBtn.classList.remove('visible');
+          }
+        }
+        ticking = false;
+      });
+      ticking = true;
     }
   };
 
